@@ -5,7 +5,18 @@ import catalogue.Product;
 import debug.DEBUG;
 import middle.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Observable;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * Implements the Model of the cashier client
@@ -17,7 +28,8 @@ public class CashierModel extends Observable
   private enum State { process, checked }
 
   private State       theState   = State.process;   // Current state
-  private Product     theProduct = null;            // Current product
+  private Product     theProduct = null;// Current product
+  private Product     Previous = null; // Previous Item bought
   private Basket      theBasket  = null;            // Bought items
 
   private String      pn = "";                      // Product being processed
@@ -130,6 +142,60 @@ public class CashierModel extends Observable
     theState = State.process;                   // All Done
     setChanged(); notifyObservers(theAction);
   }
+
+	/**
+	 * Delete the last item in the basket
+	 * @throws StockException 
+	 */
+  //test code 
+	public void doDelete() throws StockException {
+		if(Previous != null) { //Delete Previous if not null
+			for(Product a: theBasket) { //Find product in basket
+				if(a.getProductNum().equals(Previous.getProductNum())) {
+					a.setQuantity(a.getQuantity() - 1);
+					if(a.getQuantity() < 0) {
+						a.setQuantity(0);
+					}
+					theStock.addStock(a.getProductNum(), 1);
+					break;
+				}
+			}
+			Previous = null;			
+			setChanged(); notifyObservers("Deleted");
+		} else { //if null, delete based on user input
+			JPanel panel = new JPanel();
+			panel.add(new JLabel("Enter product number to delete:"));
+			JTextField delete = new JTextField(6);
+			panel.add(delete);
+
+			Object[] options = {"Submit", "Cancel"};
+
+			int reply = JOptionPane.showOptionDialog(null, panel, "Delete", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+			if(reply == 0 && delete.getText() != null) {
+				boolean found = false;
+				for(Product a: theBasket) { //Find product in basket
+					if(a.getProductNum().equals(delete.getText())) {
+						if(a.getQuantity() > 0) {
+							theStock.addStock(a.getProductNum(), 1);
+							a.setQuantity(a.getQuantity() - 1);
+						}						
+						if(a.getQuantity() < 0) {
+							a.setQuantity(0);
+						}
+						found = true; //found product in basket
+						break;
+					}
+				}					
+				if(found) { //only notify deletion if product was found
+					setChanged(); notifyObservers("Deleted");
+				} else {
+					JOptionPane.showMessageDialog(null, "Product not in Basket");
+				}
+			} 
+		}
+	}
+	
+//test code 
   
   /**
    * Customer pays for the contents of the basket
@@ -158,6 +224,8 @@ public class CashierModel extends Observable
     theBasket = null;
     setChanged(); notifyObservers(theAction); // Notify
   }
+  
+  
 
   /**
    * ask for update of view callled at start of day
@@ -187,6 +255,8 @@ public class CashierModel extends Observable
       }
     }
   }
+  
+ 
 
   /**
    * return an instance of a new Basket
@@ -196,5 +266,53 @@ public class CashierModel extends Observable
   {
     return new Basket();
   }
+
+/* payment system
+ * 
+ * */
+
+public boolean handlePayment() {
+	Object [] options = {"Card", "Exact Cash", "Cash", "Cancel"};
+	
+	int reply = JOptionPane.showOptionDialog(null, "How would you like to pay?", "Transaction Type", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+	if(reply == 0  || reply == 1) {
+		return true;
+	} else if (reply ==2 ) {
+		if (handleCash()){
+			return true;
+		}
+		return false;
+	} else {
+			return false;
+		}
+	}
+/* Cash
+ * 
+ */
+private boolean handleCash() {
+	double total = 0.0;
+	for (Product a : theBasket) {
+		total += a.getPrice()*a.getQuantity();
+	}
+	JPanel panel = new JPanel();
+	panel.add(new JLabel("Enter cash amount:"));
+	JTextField cash = new JTextField(6);
+	panel.add(cash);
+	
+	int reply = JOptionPane.showConfirmDialog(null, cash, "Process Cash", JOptionPane.YES_NO_OPTION);
+	if(reply == JOptionPane.YES_OPTION) {
+		if(total - Double.parseDouble(cash.getText())>0) {
+			JOptionPane.showMessageDialog(null, "Not Enough Cash! " +(total - Double.parseDouble(cash.getText()))+"Required");
+			//handleCash();
+			return false;
+		}
+		JOptionPane.showMessageDialog(null, "Change Due: "+(total - Double.parseDouble(cash.getText())));
+		return true;
+	} else {
+		return false;
+	}
+	
 }
-  
+}
+	
+

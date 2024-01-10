@@ -4,6 +4,9 @@ import middle.MiddleFactory;
 import middle.OrderProcessing;
 
 import javax.swing.*;
+
+import clients.SoundButton;
+
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -58,6 +61,11 @@ public class CollectView implements Observer
     theBtCollect.addActionListener(                 // Call back code
       e -> cont.doCollect( theInput.getText()) );
     cp.add( theBtCollect );                         //  Add to canvas
+    theBtCollect.setBackground(Color.green);             //change button background
+    theBtCollect.setOpaque(true);
+    theBtCollect.setBorderPainted(false);
+    theBtCollect.setForeground(Color.white);
+    theBtCollect.addActionListener(new SoundButton("click.wav")); // click sound effect
 
     theAction.setBounds( 110, 25 , 270, 20 );       // Message area
     theAction.setText( "" );                        // Blank

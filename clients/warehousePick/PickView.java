@@ -59,6 +59,10 @@ public class PickView implements Observer
     theBtPicked.addActionListener(                   // Call back code
       e -> cont.doPick() );
     cp.add( theBtPicked );                          //  Add to canvas
+    theBtPicked.setBackground(Color.blue);             //change button background
+    theBtPicked.setOpaque(true);
+    theBtPicked.setBorderPainted(false);
+    theBtPicked.setForeground(Color.white);
 
     theAction.setBounds( 110, 25 , 270, 20 );       // Message area
     theAction.setText( "" );                        // Blank

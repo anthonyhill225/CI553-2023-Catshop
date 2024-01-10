@@ -10,7 +10,7 @@ import java.util.Locale;
  * A collection of products from the CatShop.
  *  used to record the products that are to be/
  *   wished to be purchased.
- * @author  Mike Smith University of Brighton
+ * @author  anthony hill University of Brighton
  * @version 2.2
  *
  */
@@ -18,7 +18,7 @@ public class Basket extends ArrayList<Product> implements Serializable
 {
   private static final long serialVersionUID = 1;
   private int    theOrderNum = 0;          // Order number
-  
+ 
   /**
    * Constructor for a basket which is
    *  used to represent a customer order/ wish list
@@ -27,7 +27,7 @@ public class Basket extends ArrayList<Product> implements Serializable
   {
     theOrderNum  = 0;
   }
-  
+ 
   /**
    * Set the customers unique order number
    * Valid order Numbers 1 .. N
@@ -46,7 +46,7 @@ public class Basket extends ArrayList<Product> implements Serializable
   {
     return theOrderNum;
   }
-  
+ 
   /**
    * Add a product to the Basket.
    * Product is appended to the end of the existing products
@@ -74,7 +74,7 @@ public class Basket extends ArrayList<Product> implements Serializable
     double total = 0.00;
     if ( theOrderNum != 0 )
       fr.format( "Order number: %03d\n", theOrderNum );
-      
+     
     if ( this.size() > 0 )
     {
       for ( Product pr: this )

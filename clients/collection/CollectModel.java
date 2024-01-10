@@ -4,6 +4,13 @@ import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.OrderProcessing;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 
 /**
@@ -75,6 +82,8 @@ public class CollectModel extends Observable
     setChanged(); notifyObservers(theAction);
   }
 
+  
+  
   /**
    * The output to be displayed
    * @return The string to be displayed

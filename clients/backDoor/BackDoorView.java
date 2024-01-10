@@ -4,6 +4,9 @@ import middle.MiddleFactory;
 import middle.StockReadWriter;
 
 import javax.swing.*;
+
+import clients.SoundButton;
+
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -63,17 +66,33 @@ public class BackDoorView implements Observer
     theBtQuery.addActionListener(                   // Call back code
       e -> cont.doQuery( theInput.getText() ) );
     cp.add( theBtQuery );                           //  Add to canvas
+    theBtQuery.setBackground(Color.blue);             //change button background
+    theBtQuery.setOpaque(true);
+    theBtQuery.setBorderPainted(false);
+    theBtQuery.setForeground(Color.white);
+    theBtQuery.addActionListener(new SoundButton("click.wav")); // click noise effect
 
     theBtRStock.setBounds( 16, 25+60*1, 80, 40 );   // Check Button
     theBtRStock.addActionListener(                  // Call back code
       e -> cont.doRStock( theInput.getText(),
                           theInputNo.getText() ) );
     cp.add( theBtRStock );                          //  Add to canvas
+    theBtRStock.setBackground(Color.green);             //change button background
+    theBtRStock.setOpaque(true);
+    theBtRStock.setBorderPainted(false);
+    theBtRStock.setForeground(Color.white);
+    theBtRStock.addActionListener(new SoundButton("click.wav")); // click noise effect
 
     theBtClear.setBounds( 16, 25+60*2, 80, 40 );    // Buy button 
     theBtClear.addActionListener(                   // Call back code
       e -> cont.doClear() );
     cp.add( theBtClear );                           //  Add to canvas
+    theBtClear.setBackground(Color.red);             //change button background
+    theBtClear.setOpaque(true);
+    theBtClear.setBorderPainted(false);
+    theBtClear.setForeground(Color.white);
+    theBtClear.addActionListener(new SoundButton("click.wav")); // click noise effect
+    
 
  
     theAction.setBounds( 110, 25 , 270, 20 );       // Message area

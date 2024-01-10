@@ -1,9 +1,12 @@
 package clients.cashier;
 
+import middle.StockException;
 
 /**
  * The Cashier Controller
  * @author M A Smith (c) June 2014
+ * 	Amended by Anna Wilde
+ * version 2.0
  */
 
 public class CashierController
@@ -30,6 +33,8 @@ public class CashierController
   {
     model.doCheck(pn);
   }
+  
+  
 
    /**
    * Buy interaction from view
@@ -39,6 +44,11 @@ public class CashierController
     model.doBuy();
   }
   
+  
+  
+
+  
+  
    /**
    * Bought interaction from view
    */
@@ -46,4 +56,11 @@ public class CashierController
   {
     model.doBought();
   }
+  
+  public void doDelete()throws StockException
+  {
+	  model.doDelete();
+  }
+  
+  
 }

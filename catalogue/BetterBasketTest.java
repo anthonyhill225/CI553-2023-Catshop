@@ -1,58 +1,51 @@
 package catalogue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class BetterBasketTest {
 
-	@Test
-	void testAddProduct() {
-		BetterBasket b = new BetterBasket();
-		Product p1 = new Product("0001", "Toaster", 10.00, 1);
-		Product p2 = new Product("0001", "Toaster", 10.00, 1);
-		Product P3 = new Product("0002", "Kettle", 15.00, 1);
-		Product P4 = new Product("0002", "Kettle", 15.00, 2);
-		
-		// test that p1 and p2 get merged
-		b.add(p1);
-		b.add(p2);
-		assertEquals(1, b.size(), "size incorrect after merge");
-		assertEquals(2, b.get(0).getQuantity(), "quantity incorrect after merge");
-		
-		//test that p3 dosent get merged 
-		b.add(P3);
-		assertEquals(2, b.size(), "size incorrect after non-merge");
-		
-		//test that p4 merges two into 3 
-		b.add(P4);
-		assertEquals(3, b.get(1).getQuantity(), "quantity incorrect after revers merg");
-		
-		
-	}
-	
-	@Test
-	void testSortAddProduct() {
-		BetterBasket b = new BetterBasket();
-		Product p1 = new Product("0001", "Toaster", 10.00, 1);
-		Product p2 = new Product("0001", "Microwave", 50.00, 1);
-		Product p3 = new Product("0003", "Kettle", 15.00, 1);
-		
-		//test that p1 and p3 get sorted 
-		b.add(p3);
-		b.add(p1);
-		assertEquals("0001", b.get(0).getProductNum(), "product missorted");
-		assertEquals("0003", b.get(1).getProductNum(), "product missorted");
-		
-		//test that p2 gets inserted
-		b.add(p2);
-		assertEquals("0001", b.get(0).getProductNum(), "product incorrect after insert");
-		assertEquals("0002", b.get(1).getProductNum(), "product incorect after insert");
-		assertEquals("0003", b.get(2).getProductNum(), "product incorect after insert");
-		
-		
-		
-		
-	}
+    private BetterBasket basket;
 
+    @BeforeEach
+    public void setUp() {
+        basket = new BetterBasket();
+    }
+
+    @Test
+    public void testAddNewProduct() {
+        Product newProduct = new Product("123", "Description", 10.0, 1);
+        assertTrue(basket.add(newProduct));
+        assertEquals(1, basket.size());
+        assertEquals(newProduct, basket.get(0));
+    }
+
+    @Test
+    public void testAddExistingProductIncreasesQuantity() {
+        Product existingProduct = new Product("123", "Description", 10.0, 1);
+        basket.add(existingProduct);
+
+        Product sameProduct = new Product("123", "Description", 10.0, 2);
+        assertTrue(basket.add(sameProduct));
+        assertEquals(1, basket.size());
+        assertEquals(3, basket.get(0).getQuantity());
+    }
+
+    @Test
+    public void testProductsAreSortedByProductNumber() {
+        Product product1 = new Product("123", "Desc1", 10.0, 1);
+        Product product2 = new Product("456", "Desc2", 20.0, 1);
+        Product product3 = new Product("789", "Desc3", 30.0, 1);
+
+        basket.add(product2);
+        basket.add(product3);
+        basket.add(product1);
+
+        assertEquals("123", basket.get(0).getProductNum());
+        assertEquals("456", basket.get(1).getProductNum());
+        assertEquals("789", basket.get(2).getProductNum());
+    }
 }

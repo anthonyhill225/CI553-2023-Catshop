@@ -3,6 +3,7 @@ package clients.customer;
 import catalogue.Basket;
 import catalogue.BetterBasket;
 import clients.Picture;
+import clients.SoundButton;
 import middle.MiddleFactory;
 import middle.StockReader;
 
@@ -68,11 +69,21 @@ public class CustomerView implements Observer
     theBtCheck.addActionListener(                   // Call back code
       e -> cont.doCheck( theInput.getText() ) );
     cp.add( theBtCheck );                           //  Add to canvas
+    theBtCheck.setBackground(Color.blue);             //change button background
+    theBtCheck.setOpaque(true);
+    theBtCheck.setBorderPainted(false);
+    theBtCheck.setForeground(Color.white);
+    theBtCheck.addActionListener(new SoundButton("click.wav")); // click sound effect
 
     theBtClear.setBounds( 16, 25+60*1, 80, 40 );    // Clear button
     theBtClear.addActionListener(                   // Call back code
       e -> cont.doClear() );
     cp.add( theBtClear );                           //  Add to canvas
+    theBtClear.setBackground(Color.red);             //change button background
+    theBtClear.setOpaque(true);
+    theBtClear.setBorderPainted(false);
+    theBtClear.setForeground(Color.white);
+    theBtClear.addActionListener(new SoundButton("click.wav")); // click sound effect
 
     theAction.setBounds( 110, 25 , 270, 20 );       // Message area
     theAction.setText( "" );                        //  Blank

@@ -1,12 +1,15 @@
 package clients.cashier;
-
 import catalogue.Basket;
+import clients.SoundButton;
 import middle.MiddleFactory;
 import middle.OrderProcessing;
+import middle.StockException;
 import middle.StockReadWriter;
+import javax.sound.sampled.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -14,6 +17,8 @@ import java.util.Observer;
 /**
  * View of the model
  * @author  M A Smith (c) June 2014  
+ * 	amended by Anna Wilde
+ * version 2.0
  */
 public class CashierView implements Observer
 {
@@ -23,14 +28,23 @@ public class CashierView implements Observer
   private static final String CHECK  = "Check";
   private static final String BUY    = "Buy";
   private static final String BOUGHT = "Bought";
+  private static final String DELETE = "Delete";
+ 
+ 
+
 
   private final JLabel      theAction  = new JLabel();
   private final JTextField  theInput   = new JTextField();
   private final JTextArea   theOutput  = new JTextArea();
   private final JScrollPane theSP      = new JScrollPane();
-  private final JButton     theBtCheck = new JButton( CHECK );
-  private final JButton     theBtBuy   = new JButton( BUY );
-  private final JButton     theBtBought= new JButton( BOUGHT );
+  private final JButton     theBtCheck = new JButton( CHECK );  //check if customer wants item 
+  private final JButton     theBtBuy   = new JButton( BUY ); //buy item
+  private final JButton     theBtBought= new JButton( BOUGHT ); //after item is check buy item
+  private final JButton     theBtDelete= new JButton( DELETE ); //delete button
+ 
+  
+  
+ 
 
   private StockReadWriter theStock     = null;
   private OrderProcessing theOrder     = null;
@@ -66,16 +80,57 @@ public class CashierView implements Observer
     theBtCheck.addActionListener(                   // Call back code
       e -> cont.doCheck( theInput.getText() ) );
     cp.add( theBtCheck );                           //  Add to canvas
+    theBtCheck.setBackground(Color.blue);             //change button background
+    theBtCheck.setOpaque(true);                    
+    theBtCheck.setBorderPainted(false);              //removes border
+    theBtCheck.setForeground(Color.white);           //change text color 
+    theBtCheck.addActionListener(new SoundButton("click.wav")); // click nosie
+    
+    
 
     theBtBuy.setBounds( 16, 25+60*1, 80, 40 );      // Buy button 
     theBtBuy.addActionListener(                     // Call back code
       e -> cont.doBuy() );
     cp.add( theBtBuy );                             //  Add to canvas
+    theBtBuy.setBackground(Color.green);             //change button background
+    theBtBuy.setOpaque(true);
+    theBtBuy.setBorderPainted(false);
+    theBtBuy.setForeground(Color.white);            // change text color to white
+    theBtBuy.addActionListener(new SoundButton("click.wav")); //add sound effect when clicked
+    
+    //delet code 
+    theBtDelete.setBounds(16, 25+60*3, 80, 40 ); //delte button / set location
+    theBtDelete.addActionListener(        //call back code
+        e -> {
+            try {
+                cont.doDelete();
+            } catch (StockException e1) {
+                //TODO auto generated catch block
+                e1.printStackTrace();
+            }
 
-    theBtBought.setBounds( 16, 25+60*3, 80, 40 );   // Clear Button
+            });
+    cp.add (theBtDelete );
+    theBtDelete.setBackground(Color.red);             //change button background
+    theBtDelete.setOpaque(true);
+    theBtDelete.setBorderPainted(false);              //remove border
+    theBtDelete.setForeground(Color.white);            //change text color 
+    theBtDelete.addActionListener(new SoundButton("click.wav")); // click noise effect
+    
+  
+    
+    
+    theBtBought.setBounds( 16, 25+60*2, 80, 40 );   // Clear Button
     theBtBought.addActionListener(                  // Call back code
       e -> cont.doBought() );
     cp.add( theBtBought );                          //  Add to canvas
+    theBtBought.setBackground(Color.green);             //change button background
+    theBtBought.setOpaque(true);
+    theBtBought.setBorderPainted(false);
+    theBtBought.setForeground(Color.white);  
+    theBtBought.addActionListener(new SoundButton("click.wav"));
+    
+    
 
     theAction.setBounds( 110, 25 , 270, 20 );       // Message area
     theAction.setText( "" );                        // Blank
@@ -102,7 +157,14 @@ public class CashierView implements Observer
   public void setController( CashierController c )
   {
     cont = c;
+    
+   
   }
+
+  
+  
+  //reserve button 
+  
 
   /**
    * Update the view

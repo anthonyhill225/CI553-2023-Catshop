@@ -2,17 +2,30 @@ package catalogue;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 
-/**
- * Write a description of class BetterBasket here.
- * 
- * @author  Your Name 
- * @version 1.0
- */
-public class BetterBasket extends Basket implements Serializable
-{
-  private static final long serialVersionUID = 1L;
-  
+public class BetterBasket extends Basket implements Serializable {
 
-  // You need to add code here
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public boolean add(Product pr) {
+        boolean found = false;
+
+        for (Product existingProduct : this) {
+            if (existingProduct.getProductNum().equals(pr.getProductNum())) {
+                existingProduct.setQuantity(existingProduct.getQuantity() + pr.getQuantity());
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            super.add(pr);
+        }
+
+        Collections.sort(this, Comparator.comparing(Product::getProductNum));
+
+        return true;
+    }
 }
