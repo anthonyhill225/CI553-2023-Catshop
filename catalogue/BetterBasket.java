@@ -28,4 +28,8 @@ public class BetterBasket extends Basket implements Serializable {
 
         return true;
     }
+    
+    public void test() {
+    	
+    }
 }
